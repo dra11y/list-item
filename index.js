@@ -1,9 +1,9 @@
 /*!
- * list-item <https://github.com/jonschlinkert/list-item>
- *
- * Copyright (c) 2015-present, Jon Schlinkert.
- * Licensed under the MIT License.
- */
+* list-item <https://github.com/jonschlinkert/list-item>
+*
+* Copyright (c) 2015-present, Jon Schlinkert.
+* Licensed under the MIT License.
+*/
 
 'use strict';
 
@@ -42,6 +42,8 @@ function listitem(options = {}, fn) {
     options = {};
   }
 
+  var numbering = [];
+
   let chars = character(options);
   let index = 0;
 
@@ -54,6 +56,12 @@ function listitem(options = {}, fn) {
     lvl = +lvl;
     index++;
 
+    numbering[lvl] = (typeof numbering[lvl] == 'undefined') ? 0 : numbering[lvl]
+    numbering[lvl]++
+
+    // console.log(lvl)
+    // console.log(numbering[lvl])
+
     let bullet = chars ? chars[lvl % chars.length] : '';
     let indent = typeof options.indent !== 'string'
       ? (lvl > 0 ? '  ' : '')
@@ -64,7 +72,7 @@ function listitem(options = {}, fn) {
       : '';
 
     if (typeof fn === 'function') {
-      return fn(indent.repeat(lvl), bullet, index);
+      prefix = fn(indent.repeat(lvl), lvl, bullet, numbering, index);
     }
 
     let res = '';
